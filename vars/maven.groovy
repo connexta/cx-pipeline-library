@@ -32,7 +32,7 @@ def call(body) {
 
   // If this is running on *nix then set the random device to /dev/urandom
   if (isUnix()) {
-    m2Opts = "${m2Opts} 
+    m2Opts = "${m2Opts} ${NIX_RANDOM}"
   }
   
   if (config.size != null) {
