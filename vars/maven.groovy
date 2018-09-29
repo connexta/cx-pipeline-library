@@ -23,6 +23,7 @@ def call(body) {
   body.delegate = config
   body()
 
+  def m2Opts = ""
   def goals = config.goals ?: DEFAULT_GOALS
   def m2Args = "${goals} ${BATCH_MODE} ${DISABLE_DOWNLOAD_PROGRESS}"
   def mavenVersion = config.version ?: DEFAULT_MAVEN
@@ -37,7 +38,7 @@ def call(body) {
   
   if (config.size != null) {
     if (config.size == "large") {
-      m2Args = "${m2Args} ${LARGE_OPTS}"
+      m2Opts = "${m2Opts} ${LARGE_OPTS}"
     }
   }
 
