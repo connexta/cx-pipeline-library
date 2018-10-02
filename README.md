@@ -32,6 +32,7 @@ maven {
   modules = '!foo, bar, baz'
   opts = '-Dsome.additional.options'
   goals = 'clean install'
+  updateSnapshots = false
 }
 ```
 ### quickbuild
@@ -49,5 +50,20 @@ quickbuild {
   size = 'large'
   modules = '!foo, bar, baz'
   opts = '-Dsome.additional.options'
+}
+```
+
+### incrementalBuild
+
+Simplifies performing an incremental build during pull requests
+
+```groovy
+incrementalBuild {
+  version = 'Maven 3.5.4
+  java = 'jdk8-latest'
+  globalSettings = 'default-global-settings'
+  settings = 'codice-maven-settings'
+  size = 'large'
+  itests = '!itestModule'
 }
 ```
