@@ -16,7 +16,7 @@ def call(body) {
   body.delegate = config
   body()
   
-  def qbOpts = "${SKIP_STATIC} ${SKIP_ITESTS}"
+  def qbOpts = "${SKIP_STATIC} ${SKIP_TESTS}"
   
   if (config.opts != null) {
     qbOpts = "${qbOpts} ${config.opts}"

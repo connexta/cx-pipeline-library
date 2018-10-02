@@ -16,6 +16,7 @@ def call(body) {
   final String BATCH_MODE = '-B'
   final String DEFAULT_GOALS = 'install'
   final String PROJECT_LIST = "-pl"
+  final String DISABLE_SNAPSHOT_UPDATES = '-nsu'
   final String DISABLE_DOWNLOAD_PROGRESS = '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
 
   def config = [:]
@@ -30,6 +31,7 @@ def call(body) {
   def javaVersion = config.java ?: DEFAULT_JAVA
   def globalSettings = config.globalSettings ?: DEFAULT_GLOBAL_SETTINGS
   def settings = config.settings ?: DEFAULT_SETTINGS
+  def nsu = config.updateSnapshots ?: true
 
   // If this is running on *nix then set the random device to /dev/urandom
   if (isUnix()) {
@@ -48,6 +50,10 @@ def call(body) {
 
   if (config.opts != null) {
     m2Args = "${m2Args} ${config.opts}"
+  }
+
+  if (!nsu) {
+    m2Args = "${m2Args} ${DISABLE_SNAPSHOT_UPDATES}"
   }
 
   withMaven(
