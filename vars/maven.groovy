@@ -1,37 +1,35 @@
-#!/usr/bin/env groovy
+import groovy.transform.Field
+
+import static com.connexta.ci.jenkins.pipeline.constants.Maven.*
+
+@Field String m2Opts
+@Field String goals
+@Field String m2Args
+@Field String mavenVersion
+@Field String javaVersion
+@Field String globalSettings
+@Field String settings
+@Field Boolean nsu
 
 /**
-* Execute a maven build step.
-* Wraps usage of 'withMaven' and takes additional options
-**/
-def call(body) {
-
-  final String LARGE_OPTS = '-Xmx8192M -Xss128M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC'
-  final String NIX_RANDOM = '-Djava.security.egd=file:/dev/./urandom'
-  final String DEFAULT_MAVEN = 'M3'
-  final String DEFAULT_JAVA = 'jdk8-latest'
-  final String DEFAULT_GLOBAL_SETTINGS = 'default-global-settings'
-  // TODO: need to think about whether this is a good default or not
-  final String DEFAULT_SETTINGS = 'codice-maven-settings'
-  final String BATCH_MODE = '-B'
-  final String DEFAULT_GOALS = 'install'
-  final String PROJECT_LIST = "-pl"
-  final String DISABLE_SNAPSHOT_UPDATES = '-nsu'
-  final String DISABLE_DOWNLOAD_PROGRESS = '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
+ * Execute a maven build step.
+ * Wraps usage of 'withMaven' and takes additional options
+ **/
+def call(Closure body) {
 
   def config = [:]
   body.resolveStrategy = Closure.DELEGATE_FIRST
   body.delegate = config
   body()
 
-  def m2Opts = ""
-  def goals = config.goals ?: DEFAULT_GOALS
-  def m2Args = "${goals} ${BATCH_MODE} ${DISABLE_DOWNLOAD_PROGRESS}"
-  def mavenVersion = config.version ?: DEFAULT_MAVEN
-  def javaVersion = config.java ?: DEFAULT_JAVA
-  def globalSettings = config.globalSettings ?: DEFAULT_GLOBAL_SETTINGS
-  def settings = config.settings ?: DEFAULT_SETTINGS
-  def nsu = config.updateSnapshots ?: true
+  m2Opts = ""
+  goals = config.goals ?: DEFAULT_GOALS
+  m2Args = "${goals} ${BATCH_MODE} ${DISABLE_DOWNLOAD_PROGRESS}"
+  mavenVersion = config.version ?: DEFAULT_MAVEN
+  javaVersion = config.java ?: DEFAULT_JAVA
+  globalSettings = config.globalSettings ?: DEFAULT_GLOBAL_SETTINGS
+  settings = config.settings ?: DEFAULT_SETTINGS
+  nsu = (config.updateSnapshots == null) ? true : config.updateSnapshots
 
   // If this is running on *nix then set the random device to /dev/urandom
   if (isUnix()) {
