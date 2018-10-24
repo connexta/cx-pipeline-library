@@ -67,3 +67,18 @@ incrementalBuild {
   itests = '!itestModule'
 }
 ```
+
+### dockerd
+
+Runs a docker daemon as a background process
+
+* Logs are written to `/var/log/dockerd.log` by default
+* Insecure registries will not be accessible by default
+* Insecure registry option can be either a `Collection` or a `String`
+
+```groovy
+dockerd {
+  log = '/foo/bar.log'
+  insecureRegistries = ['someRegistryUrl', 'anotherRegistryUrl']
+}
+```
