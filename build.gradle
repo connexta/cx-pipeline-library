@@ -8,7 +8,7 @@ repositories {
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.6'
     testCompile 'org.spockframework:spock-core:1.2-groovy-2.4'
-    testCompile 'com.lesfurets:jenkins-pipeline-unit:1.2-SNAPSHOT'
+    testCompile 'com.lesfurets:jenkins-pipeline-unit:1.1'
     testCompile 'commons-io:commons-io:2.5'
     testCompile 'com.cloudbees:groovy-cps:1.12'
     testCompile 'org.slf4j:slf4j-simple:1.7.25'

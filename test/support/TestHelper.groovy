@@ -32,4 +32,12 @@ class TestHelper extends BasePipelineTest {
         helper.registerAllowedMethod("bat", [Map.class], null)
         helper.registerAllowedMethod("bat", [String.class], null)
     }
+
+    void addEnvVar(String name, String val) {
+        if (!binding.hasVariable('env')) {
+            binding.setVariable('env', new Expando(getProperty: { p -> this[p] }, setProperty: { p, v -> this[p] = v }))
+        }
+        def env = binding.getVariable('env') as Expando
+        env[name] = val
+    }
 }
