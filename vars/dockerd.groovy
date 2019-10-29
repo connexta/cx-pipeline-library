@@ -12,30 +12,32 @@ import static com.connexta.ci.jenkins.pipeline.constants.Docker.DOCKERD_INSECURE
 * This step will start a docker daemon as a background process.
 **/
 def call(body) {
-  def config = [:]
-  body.resolveStrategy = Closure.DELEGATE_FIRST
-  body.delegate = config
-  body()
+  timeout(time: 10, unit: 'MINUTES') {
+    def config = [:]
+    body.resolveStrategy = Closure.DELEGATE_FIRST
+    body.delegate = config
+    body()
 
-  if (config.insecureRegistries != null) {
-    if (config.insecureRegistries instanceof Collection) {
-      Collection<String> reg = config.insecureRegistries
-      reg.each {
-        dockerdCmd = "${dockerdCmd} ${DOCKERD_INSECURE_REG_OPTION} ${it}"
+    if (config.insecureRegistries != null) {
+      if (config.insecureRegistries instanceof Collection) {
+        Collection<String> reg = config.insecureRegistries
+        reg.each {
+          dockerdCmd = "${dockerdCmd} ${DOCKERD_INSECURE_REG_OPTION} ${it}"
 
+        }
+      } else if (config.insecureRegistries instanceof String) {
+        dockerdCmd = "${dockerdCmd} ${DOCKERD_INSECURE_REG_OPTION} ${config.insecureRegistries}"
       }
-    } else if (config.insecureRegistries instanceof String) {
-      dockerdCmd = "${dockerdCmd} ${DOCKERD_INSECURE_REG_OPTION} ${config.insecureRegistries}"
     }
-  }
 
-  if (config.log != null) {
-    log = config.log
-  }
+    if (config.log != null) {
+      log = config.log
+    }
 
-  if (! isUnix()) {
-    return
+    if (! isUnix()) {
+      return
+    }
+  
+    sh "nohup ${dockerdCmd} > ${log} 2>&1 &"
   }
-
-  sh "nohup ${dockerdCmd} > ${log} 2>&1 &"
 }
